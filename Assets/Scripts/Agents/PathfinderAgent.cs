@@ -15,7 +15,6 @@ public class PathfinderAgent : Agent
     private GameObject[] allObjects;
     private Dictionary<Vector3, float> interestMeasureTable;
     public GameObject pathfinderAgent;
-    private int currentIters;
 
 
     void Start()

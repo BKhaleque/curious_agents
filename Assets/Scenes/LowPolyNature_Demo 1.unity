@@ -9863,6 +9863,7 @@ MonoBehaviour:
   xStepSize: 1
   zStepSize: 2
   scoreModifier: 10
+  currentIters: 0
   exploratoryAgent: {fileID: 789652277}
   player: {fileID: 281261509}
 --- !u!195 &789652280 stripped
@@ -15528,7 +15529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8190783350786995758, guid: af127b06da3f046ebbb25b19d7c71105, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1266172941552404349, guid: af127b06da3f046ebbb25b19d7c71105, type: 3}
@@ -15547,7 +15548,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1256290141}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c015ace66db9098ca8463e548b831d82, type: 3}
   m_Name: 
@@ -15558,6 +15559,7 @@ MonoBehaviour:
   xStepSize: 5
   zStepSize: 5
   scoreModifier: 10
+  currentIters: 0
   globalAgent: {fileID: 1256290141}
   totalXSize: 200
   totalZSize: 200
@@ -23547,10 +23549,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1877218053}
   navMeshAgent: {fileID: 1877218054}
-  steps: 10
+  steps: 100
   xStepSize: 1
   zStepSize: 1
   scoreModifier: 10
+  currentIters: 0
   pathfinderAgent: {fileID: 1877218052}
 --- !u!33 &1877218056
 MeshFilter:

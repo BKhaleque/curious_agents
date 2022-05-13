@@ -38,7 +38,6 @@ namespace Agents
         //private TestPS forestSpawner;
         //private AssetAreaSpawner landmarkSpawner;
 
-        private int score;
 
 
 
@@ -160,7 +159,7 @@ namespace Agents
 
             if (!Physics.Linecast(position, toCheck.transform.position, out var hit))
             {
-                score += 1 / allObjects.Length;
+                //score += 1 / allObjects.Length;
                 if (interestMeasureTable.ContainsKey(position))
                 {
                     interestMeasureTable[position] += scoreModifier* calculateInterestingness(toCheck);

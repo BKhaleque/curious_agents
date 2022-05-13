@@ -18,7 +18,6 @@ public class ExploratortAgentDecayV2 : Agent
 
     private GameObject[] allObjects;
     int maxIters;
-    int currentIters;
     NavMeshPath p;
 
     private void Awake()

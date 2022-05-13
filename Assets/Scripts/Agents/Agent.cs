@@ -16,5 +16,8 @@ public abstract class  Agent : MonoBehaviour
     public float scoreModifier;
     public Dictionary<GameObject,int> objectsSeen;
 
+    [HideInInspector]
+    public int currentIters;
+
 
 }
