@@ -114,7 +114,7 @@ namespace Agents
 
 
 
-        private bool IsInView(GameObject origin, GameObject toCheck)
+        public  override bool IsInView(GameObject origin, GameObject toCheck)
         {
             var pointOnScreen = cam.WorldToScreenPoint(toCheck.transform.position);
             var position = origin.transform.position;

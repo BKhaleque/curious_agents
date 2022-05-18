@@ -15,7 +15,7 @@ public class ExploratortAgentDecayV2 : Agent
     private Dictionary<GameObject,int> objectsSeen;
 
     private Dictionary<Vector3, float> interestMeasureTable;
-
+    private HashSet <String>typesSeen;
     private GameObject[] allObjects;
     int maxIters;
     NavMeshPath p;
@@ -27,6 +27,7 @@ public class ExploratortAgentDecayV2 : Agent
         objectsSeen = new Dictionary<GameObject, int>();
         interestMeasureTable = new Dictionary<Vector3, float>();
         allObjects = FindObjectsOfType<GameObject>();
+        typesSeen = new HashSet<String>();
         //player = GameObject.Find("Player");
         player.gameObject.SetActive(false);
         exploratoryAgent.transform.position = Vector3.zero;
@@ -104,7 +105,7 @@ public class ExploratortAgentDecayV2 : Agent
             }
     }
 
-     private bool IsInView(GameObject origin, GameObject toCheck)
+     public override bool IsInView(GameObject origin, GameObject toCheck)
         {
             var pointOnScreen = cam.WorldToScreenPoint(toCheck.transform.position);
             var position = origin.transform.position;
@@ -229,10 +230,20 @@ public class ExploratortAgentDecayV2 : Agent
 
      private float calculateInterestingness(GameObject gameObject)
     {
-        if (gameObject.name.Contains("House"))
+        if (gameObject.name.Contains("House")){
+          if(typesSeen.Add("House"))
             return 10f * ((float)1 / allObjects.Length);
-        if (gameObject.name.Contains("Tree"))
+          else
+            return (10f * ((float)1 / allObjects.Length))/2;
+
+          }
+        if (gameObject.name.Contains("Tree")){
+          if(typesSeen.Add("Tree"))
             return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
+          else
+          return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length)/2;
+
+          }
         return ((float)1 / allObjects.Length);
     }
 
