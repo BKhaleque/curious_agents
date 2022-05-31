@@ -44,18 +44,19 @@ public class PathfinderAgent : Agent
             while (Vector3.Distance(gameObject.transform.position, focusedObject.gameObject.transform.position) > 3f)
             {
                 //move towards object
+                rotTable = new Dictionary<Quaternion, float>();
                 transform.position = Vector3.MoveTowards(transform.position,
                     focusedObject.gameObject.transform.position, xStepSize);
                     //Debug.Log("I'm here");
-              //  for (var j = 0; j < 4; j++)
-              //  {
+                for (var j = 0; j < 4; j++)
+                {
                     interestMeasure += allObjects.Where(t => IsInView(pathfinderAgent, t)).Sum(t =>
                         // ReSharper disable once PossibleLossOfFraction
                         objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
-                    //rotTable.Add(pathfinderAgent.transform.rotation,interestMeasure);
-                    //pathfinderAgent.transform.Rotate(0f,90f,0f);
+                    rotTable.Add(pathfinderAgent.transform.rotation,interestMeasure);
+                    pathfinderAgent.transform.Rotate(0f,90f,0f);
 
-              //  }
+                }
             }
 
             focusedObject = allObjects[Random.Range(0, allObjects.Length)];
