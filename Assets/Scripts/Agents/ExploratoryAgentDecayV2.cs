@@ -8,12 +8,14 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class ExploratortAgentDecayV2 : Agent
+public class ExploratoryAgentDecayV2 : Agent
 {
     public GameObject exploratoryAgent;
     public GameObject player;
+    public bool hasMemory;
+    public bool hasWeighting;
+    
     private Dictionary<GameObject,int> objectsSeen;
-
     private Dictionary<Vector3, float> interestMeasureTable;
     private HashSet <String>typesSeen;
     private GameObject[] allObjects;
@@ -163,10 +165,11 @@ public class ExploratortAgentDecayV2 : Agent
                 }
                 if (interestMeasureTable.ContainsKey(position))
                 {
-                    if (!seen)
+                    if (!seen | !hasMemory)
                     {
                         interestMeasureTable[position] += calculateInterestingness(toCheck);
-                        objectsSeen.Add(toCheck,1);
+                        if(hasMemory)
+                            objectsSeen.Add(toCheck,1);
                     }
                     else
                     {
@@ -176,10 +179,11 @@ public class ExploratortAgentDecayV2 : Agent
                 }
                 else
                 {
-                    if (!seen)
+                    if (!seen | !hasMemory)
                     {
-                        objectsSeen.Add(toCheck,1);
                         interestMeasureTable.Add(position, scoreModifier * calculateInterestingness(toCheck));
+                        if(hasMemory)
+                            objectsSeen.Add(toCheck,1);
                     }else
                     //interestMeasureTable.Add(position, scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck));
                         interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
@@ -217,7 +221,7 @@ public class ExploratortAgentDecayV2 : Agent
                 yield return new WaitForSecondsRealtime(2f);
       }
 
-     public Vector3 RandomNavmeshLocation(float radius) {
+      private Vector3 RandomNavmeshLocation(float radius) {
          Vector3 randomDirection = Random.insideUnitSphere * radius;
          randomDirection += transform.position;
          NavMeshHit hit;
@@ -230,20 +234,20 @@ public class ExploratortAgentDecayV2 : Agent
 
      private float calculateInterestingness(GameObject gameObject)
     {
-        if (gameObject.name.Contains("House")){
+        if (gameObject.name.Contains("House") && hasWeighting){
           if(typesSeen.Add("House"))
             return 10f * ((float)1 / allObjects.Length);
           else
             return (10f * ((float)1 / allObjects.Length))/2;
 
-          }
-        if (gameObject.name.Contains("Tree")){
-          if(typesSeen.Add("Tree"))
-            return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
-          else
-          return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length)/2;
+        }
+        if (gameObject.name.Contains("Tree") && hasWeighting){
+            if(typesSeen.Add("Tree"))
+                return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
+            else
+                return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length)/2;
 
-          }
+        }
         return ((float)1 / allObjects.Length);
     }
 
