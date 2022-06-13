@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Agents;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class PathfinderAgent : Agent
+public class PathfinderNonMlAgent : NonMLAgent
 {
     private GameObject focusedObject;
     //private Dictionary<GameObject,int> objectsSeen;

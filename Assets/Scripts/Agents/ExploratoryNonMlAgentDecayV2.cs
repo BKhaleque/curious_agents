@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Agents;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class ExploratoryAgentDecayV2 : Agent
+public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
 {
     public GameObject exploratoryAgent;
     public GameObject player;

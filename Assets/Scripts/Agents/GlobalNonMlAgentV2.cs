@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 namespace Agents
 {
     [RequireComponent(typeof(MeshFilter))]
-    public class Global_AgentV2 : Agent
+    public class GlobalNonMlAgentV2 : NonMLAgent
     {
         // private MeshFilter[] meshes;
         private Mesh meshToRender;
