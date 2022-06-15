@@ -22,7 +22,7 @@ public class RlAgentLogic : Agent
     public override void OnEpisodeBegin()
     {
         transform.position = Vector3.zero;
-        //target.localPosition = new Vector3(Random.Range(0, 400), 0, Random.Range(0,400));
+        target.localPosition = new Vector3(Random.Range(0, 200), 0, Random.Range(0,200));
     }
 
     public override void CollectObservations(VectorSensor sensor)
