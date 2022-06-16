@@ -6,23 +6,28 @@ public class RlAgentLogic : Agent
 {
     private Rigidbody rBody;
 
+    private Vector3 startPosition;
+
     public Transform target;
 
     public float speed;
 
     public float bestDist;
     
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         //rBody = GetComponent<Rigidbody>();
+        startPosition = transform.position;
         bestDist = Vector3.Distance(transform.position, target.position);
     }
 
     public override void OnEpisodeBegin()
     {
-        transform.position = Vector3.zero;
-        target.localPosition = new Vector3(Random.Range(0, 200), 0, Random.Range(0,200));
+        transform.position = startPosition;
+       // target.localPosition = new Vector3(Random.Range(0, 200), 0, Random.Range(0,200));
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -42,18 +47,33 @@ public class RlAgentLogic : Agent
 
         transform.position += new Vector3(moveX, moveY, moveZ) * Time.deltaTime * speed;
         float curDist = Vector3.Distance(transform.position, target.position);
-        if (Vector3.Distance(transform.position, target.position) < bestDist)
+        if ((curDist < bestDist) && bestDist > 1f)
         {
             bestDist = curDist;
-            SetReward(1.0f);
-            EndEpisode();
+            SetReward(0.1f);
+            //EndEpisode();
         }
 
-        if (transform.position.y < -1)
+        else if(bestDist <=1f)
+        {
+            SetReward(1f);
+            EndEpisode();
+
+        }
+        // else if(curDist > bestDist)
+        // {
+        //     SetReward(-0.01f);
+        //     //EndEpisode();
+        //
+        // }
+
+        if (Mathf.Abs(startPosition.y - transform.position.y) < -5f || Mathf.Abs(startPosition.y - transform.position.y) > 10f)
         {
             SetReward(-1f);
             EndEpisode();
         }
+        
+
 
     }
 
