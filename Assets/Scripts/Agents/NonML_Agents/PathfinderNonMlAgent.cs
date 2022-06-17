@@ -16,7 +16,11 @@ public class PathfinderNonMlAgent : NonMLAgent
     private GameObject[] allObjects;
     private Dictionary<Vector3, float> interestMeasureTable;
     public GameObject pathfinderAgent;
-
+    public bool usingNMax;
+    //public bool hasMemory;
+    public bool hasWeighting;
+    private int nMax;
+    private int noOfObjectsSeen;
 
     void Start()
     {
@@ -25,6 +29,11 @@ public class PathfinderNonMlAgent : NonMLAgent
         allObjects = FindObjectsOfType<GameObject>();
         focusedObject = allObjects[Random.Range(0, allObjects.Length)];// pick rando object for now
         interestMeasureTable = new Dictionary<Vector3, float>();
+        nMax = 1;
+        foreach (var t in allObjects)
+        {
+            IsInView(pathfinderAgent,t);
+        }
         //FindPathToObject();
     }
 
@@ -32,9 +41,8 @@ public class PathfinderNonMlAgent : NonMLAgent
     {
 
             var interestMeasure = 0f;
-
-            var ultimateTarget =  focusedObject.gameObject.transform.rotation * new Vector3(gameObject.transform.position.x + xStepSize,gameObject.transform.position.y,gameObject.transform.position.z + zStepSize) ;
-            var p = new NavMeshPath();
+           // var ultimateTarget =  focusedObject.gameObject.transform.rotation * new Vector3(gameObject.transform.position.x + xStepSize,gameObject.transform.position.y,gameObject.transform.position.z + zStepSize) ;
+           // var p = new NavMeshPath();
             var rotTable = new Dictionary<Quaternion, float>();
             //Debug.Log("I'm here");
 
@@ -51,11 +59,12 @@ public class PathfinderNonMlAgent : NonMLAgent
                     //Debug.Log("I'm here");
                 for (var j = 0; j < 4; j++)
                 {
+                    noOfObjectsSeen = 0;
                     interestMeasure += allObjects.Where(t => IsInView(pathfinderAgent, t)).Sum(t =>
                         // ReSharper disable once PossibleLossOfFraction
                         objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
-                    rotTable.Add(pathfinderAgent.transform.rotation,interestMeasure);
-                    pathfinderAgent.transform.Rotate(0f,90f,0f);
+                    rotTable.Add(cam.transform.rotation,interestMeasure);
+                    cam.transform.Rotate(0f,90f,0f);
 
                 }
             }
@@ -153,6 +162,13 @@ public class PathfinderNonMlAgent : NonMLAgent
                     //interestMeasureTable.Add(position, scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck));
                         interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
                 }
+                
+                noOfObjectsSeen++;
+                if (usingNMax && noOfObjectsSeen > nMax)
+                {
+                    nMax = noOfObjectsSeen;
+                    //Debug.Log(nMax);
+                }
                 return true;
             }
             if (hit.transform.name == toCheck.name) return true;
@@ -169,14 +185,29 @@ public class PathfinderNonMlAgent : NonMLAgent
             return false;
         }
 
-    private float calculateInterestingness(GameObject gameObject)
-    {
-        if (gameObject.name.Contains("House"))
-            return 10f * ((float)1 / allObjects.Length);
-        if (gameObject.name.Contains("Tree"))
-            return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
-        return ((float)1 / allObjects.Length);
-    }
+     private float calculateInterestingness(GameObject gameObject)
+     {
+         if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
+                 return 10f * ((float)1 / allObjects.Length);
+         }
+        
+         if (gameObject.name.Contains("House") && hasWeighting & usingNMax){
+                 return 10f * ((float)1 / nMax);
+
+         }
+         if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
+                 return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
+
+         }
+         if( gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
+             return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / nMax);
+        
+         if(usingNMax)
+             return ((float)1 / nMax);
+
+
+         return ((float)1 / allObjects.Length);
+     }
 
     void Update(){
       if(currentIters <= steps){
@@ -189,15 +220,7 @@ public class PathfinderNonMlAgent : NonMLAgent
 
 
     private static string GETPath(){
-#if UNITY_EDITOR
         return Application.dataPath +"/CSV/Pathfinder/"+"heatmaps_pathfinder_agent_" + SceneManager.GetActiveScene().name +".csv";
-#elif UNITY_ANDROID
-        return Application.persistentDataPath+"Saved_data.csv";
-#elif UNITY_IPHONE
-        return Application.persistentDataPath+"/"+"Saved_data.csv";
-#else
-        return Application.dataPath +"/"+"Saved_data.csv";
-#endif
     }
 
 }
