@@ -191,6 +191,12 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
                 }
                 else
                 {
+                    noOfObjectsSeen++;
+                    if (usingNMax && noOfObjectsSeen > nMax)
+                    {
+                        nMax = noOfObjectsSeen;
+                        //Debug.Log(nMax);
+                    }
                     if (!seen | !hasMemory)
                     {
                         interestMeasureTable.Add(position, scoreModifier * calculateInterestingness(toCheck));
@@ -201,12 +207,7 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
                         interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
                 }
 
-                noOfObjectsSeen++;
-                if (usingNMax && noOfObjectsSeen > nMax)
-                {
-                    nMax = noOfObjectsSeen;
-                    //Debug.Log(nMax);
-                }
+
                 return true;
             }
             if (hit.transform.name == toCheck.name) return true;
@@ -283,6 +284,5 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
 
     private static string GETPath(){
         return Application.dataPath +"/CSV/Exploratory/"+"heatmaps_decay_agent_" + SceneManager.GetActiveScene().name +".csv";
-
     }
 }
