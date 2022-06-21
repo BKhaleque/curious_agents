@@ -252,8 +252,9 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
          return finalPosition;
      }
 
-     private float calculateInterestingness(GameObject gameObject)
+     public override float calculateInterestingness(GameObject gameObject)
     {
+        var localScale = gameObject.transform.localScale;
         if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
           if(typesSeen.Add("House"))
             return 10f * ((float)1 / allObjects.Length);
@@ -267,14 +268,24 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
 
         }
         if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
-            if(typesSeen.Add("Tree"))
-                return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
-            return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length)/2;
+            if (typesSeen.Add("Tree"))
+                return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
+            return (localScale.x + localScale.z +
+                    localScale.y) * ((float) 1 / allObjects.Length) / 2;
 
         }
-        if( gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
-            return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / nMax);
-        
+
+        if (gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
+        {
+
+            if (typesSeen.Add("Tree"))
+                return (localScale.x + localScale.z +
+                        localScale.y) * ((float) 1 / nMax);
+            return (localScale.x + localScale.z +
+                    localScale.y) * ((float) 1 / nMax) / 2;
+
+        }
+
         if(usingNMax)
             return ((float)1 / nMax);
 

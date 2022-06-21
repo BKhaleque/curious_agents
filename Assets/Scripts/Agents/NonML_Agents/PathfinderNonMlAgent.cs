@@ -185,7 +185,7 @@ public class PathfinderNonMlAgent : NonMLAgent
             return false;
         }
 
-     private float calculateInterestingness(GameObject gameObject)
+     public override float calculateInterestingness(GameObject gameObject)
      {
          if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
                  return 10f * ((float)1 / allObjects.Length);
@@ -195,13 +195,17 @@ public class PathfinderNonMlAgent : NonMLAgent
                  return 10f * ((float)1 / nMax);
 
          }
-         if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
-                 return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / allObjects.Length);
-
+         if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax)
+         {
+             var localScale = gameObject.transform.localScale;
+             return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
          }
          if( gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
-             return (gameObject.transform.localScale.x + gameObject.transform.localScale.z + gameObject.transform.localScale.y) * ((float) 1 / nMax);
-        
+         {
+             var localScale = gameObject.transform.localScale;
+             return (localScale.x + localScale.z + localScale.y) * ((float) 1 / nMax);
+         }
+
          if(usingNMax)
              return ((float)1 / nMax);
 

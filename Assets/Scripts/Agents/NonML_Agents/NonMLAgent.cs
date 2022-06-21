@@ -22,6 +22,7 @@ namespace Agents
 
 
         public abstract bool IsInView(GameObject origin, GameObject toCheck);
+        public abstract float calculateInterestingness(GameObject gameObject);
 
     }
 }

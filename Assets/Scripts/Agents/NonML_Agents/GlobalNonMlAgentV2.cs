@@ -186,7 +186,7 @@ namespace Agents
             return false;
         }
 
-        private float calculateInterestingness(GameObject gameObject)
+        public override float calculateInterestingness(GameObject gameObject)
         {
             if (gameObject.name.Contains("House"))
                 return 10f * ((float)1 / allObjects.Length);
