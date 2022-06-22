@@ -15,6 +15,8 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
     public GameObject player;
     public bool hasMemory;
     public bool hasWeighting;
+    //public int noOfWeightings;
+    public string[] weightingNames;
 
     public bool usingNMax;
     
@@ -254,42 +256,53 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
 
      public override float calculateInterestingness(GameObject gameObject)
     {
-        var localScale = gameObject.transform.localScale;
-        if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
-          if(typesSeen.Add("House"))
+        //var localScale = gameObject.transform.localScale;
+        if (hasWeighting & !usingNMax)
+        {
+            if (weightingNames.Any(t => gameObject.name.Contains(t) && typesSeen.Add(t)))
+            
+                return 10f * ((float)1 / allObjects.Length);
+            
+            if (weightingNames.Any(t => gameObject.name.Contains(t)))
+                return (10f * ((float)1 / allObjects.Length))/2;
+            
             return 10f * ((float)1 / allObjects.Length);
-          return (10f * ((float)1 / allObjects.Length))/2;
+
+            
         }
         
-        if (gameObject.name.Contains("House") && hasWeighting & usingNMax){
-            if(typesSeen.Add("House"))
-                return 10f * ((float)1 / nMax);
-            return (10f * ((float)1 / nMax))/2;
-
-        }
-        if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
-            if (typesSeen.Add("Tree"))
-                return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
-            return (localScale.x + localScale.z +
-                    localScale.y) * ((float) 1 / allObjects.Length) / 2;
-
-        }
-
-        if (gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
+        if (hasWeighting & usingNMax)
         {
-
-            if (typesSeen.Add("Tree"))
-                return (localScale.x + localScale.z +
-                        localScale.y) * ((float) 1 / nMax);
-            return (localScale.x + localScale.z +
-                    localScale.y) * ((float) 1 / nMax) / 2;
-
+            if (weightingNames.Any(t => gameObject.name.Contains(t) && typesSeen.Add(t)))
+            {
+                return 10f * ((float)1 / nMax);
+            }
+            if(weightingNames.Any(t => gameObject.name.Contains(t)))
+                return (10f * ((float)1 / nMax))/2;
+            
+            return 10f * ((float)1 / nMax);
         }
-
+        // if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
+        //     if (typesSeen.Add("Tree"))
+        //         return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
+        //     return (localScale.x + localScale.z +
+        //             localScale.y) * ((float) 1 / allObjects.Length) / 2;
+        //
+        // }
+        //
+        // if (gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
+        // {
+        //
+        //     if (typesSeen.Add("Tree"))
+        //         return (localScale.x + localScale.z +
+        //                 localScale.y) * ((float) 1 / nMax);
+        //     return (localScale.x + localScale.z +
+        //             localScale.y) * ((float) 1 / nMax) / 2;
+        //
+        // }
         if(usingNMax)
             return ((float)1 / nMax);
-
-
+        
         return ((float)1 / allObjects.Length);
     }
 

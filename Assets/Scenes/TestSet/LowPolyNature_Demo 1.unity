@@ -9926,9 +9926,12 @@ MonoBehaviour:
   currentIters: 0
   exploratoryAgent: {fileID: 789652277}
   player: {fileID: 281261509}
-  hasMemory: 1
-  hasWeighting: 1
-  usingNMax: 1
+  hasMemory: 0
+  hasWeighting: 0
+  weightingNames:
+  - Tree
+  - Rock
+  usingNMax: 0
 --- !u!195 &789652280 stripped
 NavMeshAgent:
   m_CorrespondingSourceObject: {fileID: 8190783350786995753, guid: af127b06da3f046ebbb25b19d7c71105, type: 3}
@@ -23980,6 +23983,7 @@ MonoBehaviour:
   zStepSize: 1
   scoreModifier: 10
   currentIters: 0
+  weightingNames: []
   pathfinderAgent: {fileID: 1877218052}
   usingNMax: 1
   hasWeighting: 0

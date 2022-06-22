@@ -9,8 +9,10 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class PathfinderNonMlAgent : NonMLAgent
+public class RandomNonMLAgent : NonMLAgent
 {
+    public string[] weightingNames;
+
     private GameObject focusedObject;
     //private Dictionary<GameObject,int> objectsSeen;
     private GameObject[] allObjects;
@@ -187,23 +189,23 @@ public class PathfinderNonMlAgent : NonMLAgent
 
      public override float calculateInterestingness(GameObject gameObject)
      {
-         if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
-                 return 10f * ((float)1 / allObjects.Length);
+         if (hasWeighting & !usingNMax)
+         {
+
+             if (weightingNames.Any(t => gameObject.name.Contains(t)))
+                 return (10f * ((float)1 / allObjects.Length))/2;
+            
+             return 10f * ((float)1 / allObjects.Length);
+
+            
          }
         
-         if (gameObject.name.Contains("House") && hasWeighting & usingNMax){
-                 return 10f * ((float)1 / nMax);
-
-         }
-         if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax)
+         if (hasWeighting & usingNMax)
          {
-             var localScale = gameObject.transform.localScale;
-             return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
-         }
-         if( gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
-         {
-             var localScale = gameObject.transform.localScale;
-             return (localScale.x + localScale.z + localScale.y) * ((float) 1 / nMax);
+             if(weightingNames.Any(t => gameObject.name.Contains(t)))
+                 return (10f * ((float)1 / nMax))/2;
+            
+             return 10f * ((float)1 / nMax);
          }
 
          if(usingNMax)
