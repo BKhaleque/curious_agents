@@ -63,6 +63,8 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
                   objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
               rotTable.Add(cam.transform.rotation,interestMeasure);
               cam.transform.Rotate(0f,90f,0f);
+              gameObject.transform.Rotate(0f,90f,0f);
+              
 
           }
 
@@ -82,6 +84,7 @@ public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
 
               prevMeasure = kv.Value;
               cam.transform.rotation = bestRot;
+              gameObject.transform.rotation = bestRot;
 //                Debug.Log(bestRot);
 
           }

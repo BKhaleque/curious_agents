@@ -35,7 +35,7 @@ public class TrueRandomAgent : NonMLAgent
         interestMeasureTable = new Dictionary<Vector3, float>();
         allObjects = FindObjectsOfType<GameObject>();
         typesSeen = new HashSet<String>();
-        trueRandomAgent.transform.position = Vector3.zero;
+        trueRandomAgent.transform.position = new Vector3(0,1,0);
         nMax = 1;
         distance = 10;
         foreach (var t in allObjects)
@@ -66,16 +66,21 @@ public class TrueRandomAgent : NonMLAgent
                 case 0:
                 {
                     cam.transform.Rotate(0,90,0);
+                    gameObject.transform.Rotate(0,90,0);
                     break;
                 }
                 case 1:
                 {
                     cam.transform.Rotate(0,180,0);
+                    gameObject.transform.Rotate(0,180,0);
+
                     break;
                 }
                 case 2:
                 {
                     cam.transform.Rotate(0,270,0);
+                    gameObject.transform.Rotate(0,270,0);
+
                     break;
                 }
                 case 3:

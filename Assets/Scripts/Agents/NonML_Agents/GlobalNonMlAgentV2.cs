@@ -67,23 +67,25 @@ namespace Agents
             for(float z = 0; z<totalZSize; z+=zStepSize){
               Vector3 target = new Vector3(i,1,z);
               if(SetDestination(target)){
-                Debug.Log("Viable position");
+               // Debug.Log("Viable position");
 
                 gameObject.transform.position = target;
                 foreach (var t in allObjects)
                 {
-                    if (t.name == "Generator" && t.name == "GlobalAgent") continue;
+                   // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
                     for (var i = 0; i < 4; i++)
                     {
                       if(i !=3){
-                        IsInView(globalAgent, t);
+                          if (t.name != "Generator" || t.name != "GlobalAgent")
+                              IsInView(globalAgent, t);
                       }
+                      //Debug.Log(i);
                       cam.transform.Rotate(0f,90f,0f);
+                      gameObject.transform.Rotate(0,90f,0);
                     }
                 }
               }else{
                 Debug.Log("No Viable position");
-                continue;
               }
             }
             i+=xStepSize;
@@ -94,8 +96,8 @@ namespace Agents
               writer.WriteLine("X;Z;Interestingness;");
               foreach (var kv in interestMeasureTable)
               {
-                   Debug.Log(kv.Key);
-                   Debug.Log(kv.Value);
+                  // Debug.Log(kv.Key);
+                  // Debug.Log(kv.Value);
 
                    writer.WriteLine("{0};{1};{2};", kv.Key.x, kv.Key.z, kv.Value);
               }
@@ -132,7 +134,7 @@ namespace Agents
                     interestMeasureTable.Add(position,0f);
                    // interestMeasureTable[position].Add(rotation,0f);
                 }
-                Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
+               // Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
                 return false;
             }
 
@@ -140,7 +142,7 @@ namespace Agents
             if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
                 (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
             {
-                Debug.Log("OutOfBounds: " + toCheck.name + " at point " + position);
+              //  Debug.Log("OutOfBounds: " + toCheck.name + " at point " + position);
                 if (interestMeasureTable.ContainsKey(position))
                 {
                         interestMeasureTable[position]+= 0f;
@@ -182,7 +184,7 @@ namespace Agents
             {
                 interestMeasureTable.Add(position,0f);
             }
-            Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
+          //  Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
             return false;
         }
 
