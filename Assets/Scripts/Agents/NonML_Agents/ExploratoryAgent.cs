@@ -9,7 +9,7 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class ExploratoryNonMlAgentDecayV2 : NonMLAgent
+public class ExploratoryAgent : NonMLAgent
 {
     public GameObject exploratoryAgent;
     public GameObject player;

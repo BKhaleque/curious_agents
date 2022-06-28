@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 namespace Agents
 {
     [RequireComponent(typeof(MeshFilter))]
-    public class GlobalNonMlAgentV2 : NonMLAgent
+    public class GlobalMeasurer : NonMLAgent
     {
         // private MeshFilter[] meshes;
         private Mesh meshToRender;
@@ -134,7 +134,7 @@ namespace Agents
                     interestMeasureTable.Add(position,0f);
                    // interestMeasureTable[position].Add(rotation,0f);
                 }
-               // Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
+                // Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
                 return false;
             }
 
@@ -184,7 +184,7 @@ namespace Agents
             {
                 interestMeasureTable.Add(position,0f);
             }
-          //  Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
+            //  Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
             return false;
         }
 

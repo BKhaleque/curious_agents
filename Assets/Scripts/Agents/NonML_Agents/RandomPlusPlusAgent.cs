@@ -9,7 +9,7 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class RandomNonMLAgent : NonMLAgent
+public class RandomPlusPlusAgent : NonMLAgent
 {
     public string[] weightingNames;
 
