@@ -60,7 +60,7 @@ public class ExploratoryAgent : NonMLAgent
               noOfObjectsSeen = 0;
               interestMeasure += allObjects.Where(t => IsInView(exploratoryAgent, t)).Sum(t =>
                   // ReSharper disable once PossibleLossOfFraction
-                  objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
+                  objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
               rotTable.Add(cam.transform.rotation,interestMeasure);
               cam.transform.Rotate(0f,90f,0f);
               gameObject.transform.Rotate(0f,90f,0f);
@@ -184,14 +184,14 @@ public class ExploratoryAgent : NonMLAgent
                 {
                     if (!seen | !hasMemory)
                     {
-                        interestMeasureTable[position] += calculateInterestingness(toCheck);
+                        interestMeasureTable[position] += CalculateInterestingness(toCheck);
                         if(hasMemory)
                             objectsSeen.Add(toCheck,1);
                     }
                     else
                     {
                             //interestMeasureTable[position] += scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck);
-                            interestMeasureTable[position] += (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse];
+                            interestMeasureTable[position] += (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse];
                     }
                 }
                 else
@@ -204,12 +204,12 @@ public class ExploratoryAgent : NonMLAgent
                     }
                     if (!seen | !hasMemory)
                     {
-                        interestMeasureTable.Add(position, scoreModifier * calculateInterestingness(toCheck));
+                        interestMeasureTable.Add(position, scoreModifier * CalculateInterestingness(toCheck));
                         if(hasMemory)
                             objectsSeen.Add(toCheck,1);
                     }else
                     //interestMeasureTable.Add(position, scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck));
-                        interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
+                        interestMeasureTable.Add(position, (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse]);
                 }
 
 
@@ -257,7 +257,7 @@ public class ExploratoryAgent : NonMLAgent
          return finalPosition;
      }
 
-     public override float calculateInterestingness(GameObject gameObject)
+     public override float CalculateInterestingness(GameObject gameObject)
     {
         //var localScale = gameObject.transform.localScale;
         if (hasWeighting & !usingNMax)
@@ -310,6 +310,6 @@ public class ExploratoryAgent : NonMLAgent
     }
 
     private static string GETPath(){
-        return Application.dataPath +"/CSV/Exploratory/"+"heatmaps_decay_agent_" + SceneManager.GetActiveScene().name +".csv";
+        return Application.dataPath +"/CSV/Exploratory/"+"heatmaps_exploratory_agent_" + SceneManager.GetActiveScene().name +".csv";
     }
 }

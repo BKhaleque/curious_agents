@@ -57,7 +57,7 @@ public class TrueRandomAgent : NonMLAgent
             {
                 interestMeasure += allObjects.Where(t => IsInView(trueRandomAgent, t)).Sum(t =>
                     // ReSharper disable once PossibleLossOfFraction
-                    objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
+                    objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
             }
 
             var randDirection = Random.Range(0, 4);
@@ -125,16 +125,16 @@ public class TrueRandomAgent : NonMLAgent
         }
     }
 
-    private Vector3 RandomNavmeshLocation(float radius) {
-            Vector3 randomDirection = Random.insideUnitSphere * radius;
-            randomDirection += transform.position;
-            NavMeshHit hit;
-            Vector3 finalPosition = Vector3.zero;
-            if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) {
-                finalPosition = hit.position;
-            }
-            return finalPosition;
-        }
+    // private Vector3 RandomNavmeshLocation(float radius) {
+    //         Vector3 randomDirection = Random.insideUnitSphere * radius;
+    //         randomDirection += transform.position;
+    //         NavMeshHit hit;
+    //         Vector3 finalPosition = Vector3.zero;
+    //         if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) {
+    //             finalPosition = hit.position;
+    //         }
+    //         return finalPosition;
+    //     }
 
     public override bool IsInView(GameObject origin, GameObject toCheck)
         {
@@ -196,14 +196,14 @@ public class TrueRandomAgent : NonMLAgent
                 {
                     if (!seen | !hasMemory)
                     {
-                        interestMeasureTable[position] += calculateInterestingness(toCheck);
+                        interestMeasureTable[position] += CalculateInterestingness(toCheck);
                         if(hasMemory)
                             objectsSeen.Add(toCheck,1);
                     }
                     else
                     {
                             //interestMeasureTable[position] += scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck);
-                            interestMeasureTable[position] += (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse];
+                            interestMeasureTable[position] += (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse];
                     }
                 }
                 else
@@ -216,12 +216,12 @@ public class TrueRandomAgent : NonMLAgent
                     }
                     if (!seen | !hasMemory)
                     {
-                        interestMeasureTable.Add(position, scoreModifier * calculateInterestingness(toCheck));
+                        interestMeasureTable.Add(position, scoreModifier * CalculateInterestingness(toCheck));
                         if(hasMemory)
                             objectsSeen.Add(toCheck,1);
                     }else
                         //interestMeasureTable.Add(position, scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck));
-                        interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
+                        interestMeasureTable.Add(position, (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse]);
                     
 
                 }
@@ -244,7 +244,7 @@ public class TrueRandomAgent : NonMLAgent
         }
  
     
- public override float calculateInterestingness(GameObject gameObject)
+ public override float CalculateInterestingness(GameObject gameObject)
  {
      if (gameObject.name.Contains("House") && hasWeighting & !usingNMax){
          if(typesSeen.Add("House"))

@@ -63,54 +63,52 @@ namespace Agents
 
         void Update()
         {
-          if(i<=totalXSize){
+            if (!(i <= totalXSize)) return;
             for(float z = 0; z<totalZSize; z+=zStepSize){
-              Vector3 target = new Vector3(i,1,z);
-              if(SetDestination(target)){
-               // Debug.Log("Viable position");
+                Vector3 target = new Vector3(i,1,z);
+                if(SetDestination(target)){
+                    // Debug.Log("Viable position");
 
-                gameObject.transform.position = target;
-                foreach (var t in allObjects)
-                {
-                   // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
-                    for (var i = 0; i < 4; i++)
+                    gameObject.transform.position = target;
+                    foreach (var t in allObjects)
                     {
-                      if(i !=3){
-                          if (t.name != "Generator" || t.name != "GlobalAgent")
-                              IsInView(globalAgent, t);
-                      }
-                      //Debug.Log(i);
-                      cam.transform.Rotate(0f,90f,0f);
-                      gameObject.transform.Rotate(0,90f,0);
+                        // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
+                        for (var i = 0; i < 4; i++)
+                        {
+                            if(i !=3){
+                                if (t.name != "Generator" || t.name != "GlobalAgent")
+                                    IsInView(globalAgent, t);
+                            }
+                            //Debug.Log(i);
+                            cam.transform.Rotate(0f,90f,0f);
+                            gameObject.transform.Rotate(0,90f,0);
+                        }
                     }
+                }else{
+                    Debug.Log("No Viable position");
                 }
-              }else{
-                Debug.Log("No Viable position");
-              }
             }
             i+=xStepSize;
-            if(i==totalXSize){
-              var filePath = GETPath();
+            if (i != totalXSize) return;
+            var filePath = GETPath();
 
-              var writer = File.CreateText(filePath);
-              writer.WriteLine("X;Z;Interestingness;");
-              foreach (var kv in interestMeasureTable)
-              {
-                  // Debug.Log(kv.Key);
-                  // Debug.Log(kv.Value);
+            var writer = File.CreateText(filePath);
+            writer.WriteLine("X;Z;Interestingness;");
+            foreach (var kv in interestMeasureTable)
+            {
+                // Debug.Log(kv.Key);
+                // Debug.Log(kv.Value);
 
-                   writer.WriteLine("{0};{1};{2};", kv.Key.x, kv.Key.z, kv.Value);
-              }
-              gameObject.SetActive(false);
+                writer.WriteLine("{0};{1};{2};", kv.Key.x, kv.Key.z, kv.Value);
             }
-          }
+            gameObject.SetActive(false);
 
         }
 
 
         private static string GETPath(){
 #if UNITY_EDITOR
-            return Application.dataPath +"/CSV/Global/"+ "GlobalAgent_heatmaps" + SceneManager.GetActiveScene().name + ".csv";
+            return Application.dataPath +"/CSV/Global/"+ "GlobalMeasurer_heatmaps" + SceneManager.GetActiveScene().name + ".csv";
 #endif
         }
 
@@ -164,12 +162,12 @@ namespace Agents
                 //score += 1 / allObjects.Length;
                 if (interestMeasureTable.ContainsKey(position))
                 {
-                    interestMeasureTable[position] += scoreModifier* calculateInterestingness(toCheck);
+                    interestMeasureTable[position] += scoreModifier* CalculateInterestingness(toCheck);
                         //interestMeasureTable[position].Add(rotation,calculateInterestingness(toCheck));
                 }
                 else
                 {
-                    interestMeasureTable.Add(position,scoreModifier* calculateInterestingness(toCheck));
+                    interestMeasureTable.Add(position,scoreModifier* CalculateInterestingness(toCheck));
                     //interestMeasureTable[position].Add(rotation,calculateInterestingness(toCheck));
                 }
                 return true;
@@ -188,7 +186,7 @@ namespace Agents
             return false;
         }
 
-        public override float calculateInterestingness(GameObject gameObject)
+        public override float CalculateInterestingness(GameObject gameObject)
         {
             if (gameObject.name.Contains("House"))
                 return 10f * ((float)1 / allObjects.Length);

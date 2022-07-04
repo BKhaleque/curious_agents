@@ -64,7 +64,7 @@ public class RandomPlusPlusAgent : NonMLAgent
                     noOfObjectsSeen = 0;
                     interestMeasure += allObjects.Where(t => IsInView(pathfinderAgent, t)).Sum(t =>
                         // ReSharper disable once PossibleLossOfFraction
-                        objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * calculateInterestingness(t)));
+                        objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
                     rotTable.Add(cam.transform.rotation,interestMeasure);
                     cam.transform.Rotate(0f,90f,0f);
 
@@ -145,13 +145,13 @@ public class RandomPlusPlusAgent : NonMLAgent
                 {
                     if (!seen)
                     {
-                        interestMeasureTable[position] += calculateInterestingness(toCheck);
+                        interestMeasureTable[position] += CalculateInterestingness(toCheck);
                         objectsSeen.Add(toCheck,1);
                     }
                     else
                     {
                             //interestMeasureTable[position] += scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck);
-                            interestMeasureTable[position] += (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse];
+                            interestMeasureTable[position] += (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse];
                     }
                 }
                 else
@@ -159,10 +159,10 @@ public class RandomPlusPlusAgent : NonMLAgent
                     if (!seen)
                     {
                         objectsSeen.Add(toCheck,1);
-                        interestMeasureTable.Add(position, scoreModifier * calculateInterestingness(toCheck));
+                        interestMeasureTable.Add(position, scoreModifier * CalculateInterestingness(toCheck));
                     }else
                     //interestMeasureTable.Add(position, scoreModifier * (1 / objectsSeen[entryToUse]) * calculateInterestingness(toCheck));
-                        interestMeasureTable.Add(position, (scoreModifier * calculateInterestingness(toCheck))/objectsSeen[entryToUse]);
+                        interestMeasureTable.Add(position, (scoreModifier * CalculateInterestingness(toCheck))/objectsSeen[entryToUse]);
                 }
                 
                 noOfObjectsSeen++;
@@ -187,7 +187,7 @@ public class RandomPlusPlusAgent : NonMLAgent
             return false;
         }
 
-     public override float calculateInterestingness(GameObject gameObject)
+     public override float CalculateInterestingness(GameObject gameObject)
      {
          if (hasWeighting & !usingNMax)
          {
