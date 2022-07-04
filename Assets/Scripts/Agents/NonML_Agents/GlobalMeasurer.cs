@@ -16,6 +16,8 @@ namespace Agents
         // private MeshFilter[] meshes;
         private Mesh meshToRender;
         private NavMeshSurface surface;
+
+        private GameObject terrain;
         //public NavMeshAgent navMeshAgent;
         public GameObject globalAgent;
       //  public GameObject landmarkSpawnerObj;
@@ -24,6 +26,7 @@ namespace Agents
       //  public GameObject exploratoryAgent;
         public int totalXSize;
         public int totalZSize;
+        
         //public float scoreModifier;
         //public bool generate;
 
@@ -52,9 +55,15 @@ namespace Agents
 
         private void Start()
         {
-
             allObjects = FindObjectsOfType<GameObject>();
-            gameObject.transform.position = Vector3.zero;
+            terrain = GameObject.FindGameObjectWithTag("terrain");
+            totalXSize = (int) terrain.GetComponent<Renderer>().bounds.size.x;
+            i = -totalXSize;
+            //Debug.Log(totalXSize);
+            totalZSize = (int) terrain.GetComponent<Renderer>().bounds.size.z;
+            //Debug.Log(totalZSize);
+
+            //gameObject.transform.position = Vector3.zero;
             interestMeasureTable = new Dictionary<Vector3, float>();
              //reachables = GetNumberOfReachables(gameObject.transform.x, gameObject.transform.z, xStepSize, zStepSize, xSize,zSize);
              //CalculateNavMesh(totalXSize, totalZSize);
@@ -64,32 +73,73 @@ namespace Agents
         void Update()
         {
             if (!(i <= totalXSize)) return;
-            for(float z = 0; z<totalZSize; z+=zStepSize){
-                Vector3 target = new Vector3(i,1,z);
-                if(SetDestination(target)){
-                    // Debug.Log("Viable position");
+             for (int z = -totalZSize; z < totalZSize; z++)
+             {
+                 Vector3 target = new Vector3(i, Random.Range(-terrain.GetComponent<Renderer>().bounds.size.y, terrain.GetComponent<Renderer>().bounds.size.y), z);
+                 if (SetDestination(target))
+                 {
+                     Debug.Log("Viable position");
+            
+                     gameObject.transform.position = target;
+                     foreach (var t in allObjects)
+                     {
+                         // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
+                         for (var i = 0; i < 4; i++)
+                         {
+                             if (i != 3)
+                             {
+                                 if (t.name != "Generator" || t.name != "GlobalAgent")
+                                     IsInView(globalAgent, t);
+                             }
+            
+                             //Debug.Log(i);
+                             cam.transform.Rotate(0f, 90f, 0f);
+                             gameObject.transform.Rotate(0, 90f, 0);
+                         }
+                     }
+                 }
+                 else
+                 {
+                     Debug.Log("No Viable position");
+                     
+                     gameObject.transform.position = RandomNavmeshLocation(10f);
+                     //break;
+                 }
+             }
 
-                    gameObject.transform.position = target;
-                    foreach (var t in allObjects)
-                    {
-                        // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
-                        for (var i = 0; i < 4; i++)
-                        {
-                            if(i !=3){
-                                if (t.name != "Generator" || t.name != "GlobalAgent")
-                                    IsInView(globalAgent, t);
-                            }
-                            //Debug.Log(i);
-                            cam.transform.Rotate(0f,90f,0f);
-                            gameObject.transform.Rotate(0,90f,0);
-                        }
-                    }
-                }else{
-                    Debug.Log("No Viable position");
-                }
-            }
+            // while (interestMeasureTable.ContainsKey(gameObject.transform.position))
+            // {
+            //     Vector3 target = new Vector3(Random.Range(-totalXSize, totalXSize),
+            //         Random.Range(-terrain.GetComponent<Renderer>().bounds.size.y,
+            //             terrain.GetComponent<Renderer>().bounds.size.y), Random.Range(-totalZSize, totalZSize));
+            //     if (SetDestination(target))
+            //     {
+            //         gameObject.transform.position = target;
+            //     }
+            //     else
+            //     {
+            //         gameObject.transform.position = RandomNavmeshLocation(2000f);
+            //
+            //     }
+            // }
+            // foreach (var t in allObjects)
+            // {
+            //     // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
+            //     for (var l = 0; l < 4; l++)
+            //     {
+            //         if(l !=3){
+            //             if (t.name != "GlobalAgent")
+            //                 IsInView(globalAgent, t);
+            //         }
+            //         //Debug.Log(i);
+            //         cam.transform.Rotate(0f,90f,0f);
+            //         gameObject.transform.Rotate(0,90f,0);
+            //     }
+            // }
+                    
+ 
             i+=xStepSize;
-            if (i != totalXSize) return;
+            if (i < totalXSize) return;
             var filePath = GETPath();
 
             var writer = File.CreateText(filePath);
@@ -206,6 +256,19 @@ namespace Agents
           }
           return false;
         }
+        
+        private Vector3 RandomNavmeshLocation(float radius) {
+            Vector3 randomDirection = Random.insideUnitSphere * radius;
+            randomDirection += gameObject.transform.position;
+            NavMeshHit hit;
+            Vector3 finalPosition = Vector3.zero;
+            if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) {
+                finalPosition = hit.position;
+            }
+            return finalPosition;
+        }
+        
+        
 
     }
 }
