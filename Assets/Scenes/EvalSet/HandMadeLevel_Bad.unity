@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2097905872030468542, guid: 95c672ca07bf0462aa93f7837639dfef, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2097905872056164811, guid: 95c672ca07bf0462aa93f7837639dfef, type: 3}
       propertyPath: m_LocalPosition.y
@@ -758,7 +758,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8190783350786995758, guid: af127b06da3f046ebbb25b19d7c71105, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1266172941552404349, guid: af127b06da3f046ebbb25b19d7c71105, type: 3}
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 893840267}
   navMeshAgent: {fileID: 893840268}
-  steps: 100
+  steps: 200
   xStepSize: 0
   zStepSize: 1
   scoreModifier: 10

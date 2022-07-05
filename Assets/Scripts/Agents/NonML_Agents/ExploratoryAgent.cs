@@ -39,8 +39,8 @@ public class ExploratoryAgent : NonMLAgent
         allObjects = FindObjectsOfType<GameObject>();
         typesSeen = new HashSet<String>();
         //player = GameObject.Find("Player");
-        player.gameObject.SetActive(false);
-        exploratoryAgent.transform.position = Vector3.zero;
+       // player.gameObject.SetActive(false);
+        //exploratoryAgent.transform.position = new Vector3(0,1,0);
         nMax = 1;
         foreach (var t in allObjects)
         {
@@ -237,7 +237,7 @@ public class ExploratoryAgent : NonMLAgent
 
           }else{
             gameObject.SetActive(false);
-            player.gameObject.SetActive(true);
+           // player.gameObject.SetActive(true);
           }
 
         }
