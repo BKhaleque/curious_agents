@@ -52,7 +52,7 @@ public class RandomPlusPlusAgent : NonMLAgent
             //{
             //    focusedObject = allObjects[Random.Range(0, allObjects.Length)];
           //  }
-            while (Vector3.Distance(gameObject.transform.position, focusedObject.gameObject.transform.position) > 3f)
+            while (Vector3.Distance(gameObject.transform.position, focusedObject.gameObject.transform.position) > 8f)
             {
                 //move towards object
                 rotTable = new Dictionary<Quaternion, float>();
@@ -216,7 +216,7 @@ public class RandomPlusPlusAgent : NonMLAgent
      }
 
     void Update(){
-      if(currentIters <= steps){
+      if(currentIters < steps){
         FindPathToObject();
         currentIters++;
       }else{
@@ -226,7 +226,7 @@ public class RandomPlusPlusAgent : NonMLAgent
 
 
     private static string GETPath(){
-        return Application.dataPath +"/CSV/Pathfinder/"+"heatmaps_pathfinder_agent_" + SceneManager.GetActiveScene().name +".csv";
+        return Application.dataPath +"/CSV/Pathfinder/"+"random_plus_plus_eval" + SceneManager.GetActiveScene().name +".csv";
     }
 
 }

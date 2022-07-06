@@ -27137,6 +27137,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RandomAgent
       objectReference: {fileID: 0}
+    - target: {fileID: 7607849133220429179, guid: a03dd168219ce4612a7b2999453d7c95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7607849133220429181, guid: a03dd168219ce4612a7b2999453d7c95, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -27261,7 +27265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610152621058575675, guid: fe29f6d85de6d40488566b01520de3f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4610152621058575675, guid: fe29f6d85de6d40488566b01520de3f2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -27298,6 +27302,10 @@ PrefabInstance:
     - target: {fileID: 4610152621058575679, guid: fe29f6d85de6d40488566b01520de3f2, type: 3}
       propertyPath: m_Name
       value: True Random Agent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610152621058575679, guid: fe29f6d85de6d40488566b01520de3f2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe29f6d85de6d40488566b01520de3f2, type: 3}

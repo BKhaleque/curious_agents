@@ -35,8 +35,8 @@ public class TrueRandomAgent : NonMLAgent
         interestMeasureTable = new Dictionary<Vector3, float>();
         allObjects = FindObjectsOfType<GameObject>();
         typesSeen = new HashSet<String>();
-        trueRandomAgent.transform.position = new Vector3(0,1,0);
-        nMax = 1;
+        //trueRandomAgent.transform.position = new Vector3(0,1,0);
+        nMax = 10;
         distance = 10;
         foreach (var t in allObjects)
         {
@@ -60,6 +60,7 @@ public class TrueRandomAgent : NonMLAgent
                     objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
             }
 
+            transform.position =  RandomNavmeshLocation(distance);
             var randDirection = Random.Range(0, 4);
             switch (randDirection)
             {
@@ -89,7 +90,6 @@ public class TrueRandomAgent : NonMLAgent
             }
             //cam.transform.rotation = Random.rotation;
 
-            transform.position +=  cam.transform.forward * distance;
 
             // if (navMeshAgent.CalculatePath(target, p) && p.status == NavMeshPathStatus.PathComplete)
             // {
@@ -125,16 +125,16 @@ public class TrueRandomAgent : NonMLAgent
         }
     }
 
-    // private Vector3 RandomNavmeshLocation(float radius) {
-    //         Vector3 randomDirection = Random.insideUnitSphere * radius;
-    //         randomDirection += transform.position;
-    //         NavMeshHit hit;
-    //         Vector3 finalPosition = Vector3.zero;
-    //         if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) {
-    //             finalPosition = hit.position;
-    //         }
-    //         return finalPosition;
-    //     }
+    private Vector3 RandomNavmeshLocation(float radius) {
+            Vector3 randomDirection = Random.insideUnitSphere * radius;
+            randomDirection += transform.position;
+            NavMeshHit hit;
+            Vector3 finalPosition = Vector3.zero;
+            if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) {
+                finalPosition = hit.position;
+            }
+            return finalPosition;
+        }
 
     public override bool IsInView(GameObject origin, GameObject toCheck)
         {
@@ -209,7 +209,7 @@ public class TrueRandomAgent : NonMLAgent
                 else
                 {
                     noOfObjectsSeen++;
-                    if (usingNMax && noOfObjectsSeen > nMax)
+                    if (usingNMax && noOfObjectsSeen >= nMax)
                     {
                         nMax = noOfObjectsSeen;
                         //Debug.Log(nMax);
@@ -225,8 +225,7 @@ public class TrueRandomAgent : NonMLAgent
                     
 
                 }
-
-
+                
                 return true;
             }
             if (hit.transform.name == toCheck.name) return true;
