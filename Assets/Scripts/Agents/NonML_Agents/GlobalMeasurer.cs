@@ -20,12 +20,13 @@ namespace Agents
         private GameObject terrain;
         //public NavMeshAgent navMeshAgent;
         public GameObject globalAgent;
-      //  public GameObject landmarkSpawnerObj;
-      //  public GameObject treeSpawnerObj;
-      //  public GameObject smallAssetSpawnerObj;
-      //  public GameObject exploratoryAgent;
+        public bool hasWeighting;
+        public bool usingNMax;
         public int totalXSize;
         public int totalZSize;
+        public string[] weightingNames;
+        
+
         
         //public float scoreModifier;
         //public bool generate;
@@ -33,6 +34,9 @@ namespace Agents
 
         private float curMaxY = float.MinValue;
         private float curMinY = float.MaxValue;
+        private int noOfObjectsSeen;
+        private int nMax;
+        private HashSet <String>typesSeen;
 
         //private AssetAreaSpawner smallAssetSpawner;
 
@@ -59,15 +63,18 @@ namespace Agents
             terrain = GameObject.FindGameObjectWithTag("terrain");
             totalXSize = (int) terrain.GetComponent<Renderer>().bounds.size.x;
             i = -totalXSize;
+            typesSeen = new HashSet<string>();
             //Debug.Log(totalXSize);
             totalZSize = (int) terrain.GetComponent<Renderer>().bounds.size.z;
             //Debug.Log(totalZSize);
-
+            noOfObjectsSeen = 0;
+            nMax = 1;
+            CheckHowManyObjectsSeen();
             //gameObject.transform.position = Vector3.zero;
             interestMeasureTable = new Dictionary<Vector3, float>();
              //reachables = GetNumberOfReachables(gameObject.transform.x, gameObject.transform.z, xStepSize, zStepSize, xSize,zSize);
              //CalculateNavMesh(totalXSize, totalZSize);
-
+            
         }
 
         void Update()
@@ -86,6 +93,7 @@ namespace Agents
                          // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
                          for (var i = 0; i < 4; i++)
                          {
+                             CheckHowManyObjectsSeen();
                              if (i != 3)
                              {
                                  if (t.name != "Generator" || t.name != "GlobalAgent")
@@ -238,13 +246,38 @@ namespace Agents
 
         public override float CalculateInterestingness(GameObject gameObject)
         {
-            if (gameObject.name.Contains("House"))
+            //var localScale = gameObject.transform.localScale;
+            if (hasWeighting & !usingNMax)
+            {
+                if (weightingNames.Any(t => gameObject.name.Contains(t) && typesSeen.Add(t)))
+            
+                    return 10f * ((float)1 / allObjects.Length);
+            
+                if (weightingNames.Any(t => gameObject.name.Contains(t)))
+                    return (10f * ((float)1 / allObjects.Length))/2;
+            
                 return 10f * ((float)1 / allObjects.Length);
-            if (gameObject.name.Contains("Tree"))
-                return gameObject.transform.localScale.x * ((float) 1 / allObjects.Length);
-            return ((float)1 / allObjects.Length);
 
+            
+            }
+        
+            if (hasWeighting & usingNMax)
+            {
+                if (weightingNames.Any(t => gameObject.name.Contains(t) && typesSeen.Add(t)))
+                {
+                    return 10f * ((float)1 / nMax);
+                }
+                if(weightingNames.Any(t => gameObject.name.Contains(t)))
+                    return (10f * ((float)1 / nMax))/2;
+            
+                return 10f * ((float)1 / nMax);
+            }
+            if(usingNMax)
+                return ((float)1 / nMax);
+        
+            return ((float)1 / allObjects.Length);
         }
+
 
         private bool SetDestination(Vector3 targetDestination)
         {
@@ -268,6 +301,31 @@ namespace Agents
             return finalPosition;
         }
         
+        
+        
+        private void CheckHowManyObjectsSeen()
+        {
+
+            foreach (var obj in allObjects)
+            {
+                var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
+            
+                //Is in FOV
+                if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
+                    (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+                {
+                    // if (!Physics.Linecast(gameObject.transform.position, obj.transform.position, out var hit))
+                    // {
+                    noOfObjectsSeen++;
+                    if (noOfObjectsSeen > nMax)
+                    {
+                        nMax = noOfObjectsSeen;
+                        //Debug.Log(nMax);
+                    }
+                    //}
+                }
+            }
+        }
         
 
     }

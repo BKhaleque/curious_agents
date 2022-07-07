@@ -32,13 +32,10 @@ public class RandomPlusPlusAgent : NonMLAgent
         focusedObject = allObjects[Random.Range(0, allObjects.Length)];// pick rando object for now
         interestMeasureTable = new Dictionary<Vector3, float>();
         nMax = 1;
-        foreach (var t in allObjects)
-        {
-            IsInView(pathfinderAgent,t);
-        }
+        CheckHowManyObjectsSeen();
         //FindPathToObject();
     }
-
+    
     void FindPathToObject()
     {
 
@@ -62,6 +59,7 @@ public class RandomPlusPlusAgent : NonMLAgent
                 for (var j = 0; j < 4; j++)
                 {
                     noOfObjectsSeen = 0;
+                    CheckHowManyObjectsSeen();
                     interestMeasure += allObjects.Where(t => IsInView(pathfinderAgent, t)).Sum(t =>
                         // ReSharper disable once PossibleLossOfFraction
                         objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
@@ -73,7 +71,7 @@ public class RandomPlusPlusAgent : NonMLAgent
 
             focusedObject = allObjects[Random.Range(0, allObjects.Length)];
 
-            if(currentIters == steps){
+            if(currentIters >= steps){
               var filePath = GETPath();
               var writer = File.CreateText(filePath);
               writer.WriteLine("Coord;Interestingness");
@@ -216,7 +214,7 @@ public class RandomPlusPlusAgent : NonMLAgent
      }
 
     void Update(){
-      if(currentIters < steps){
+      if(currentIters <= steps){
         FindPathToObject();
         currentIters++;
       }else{
@@ -226,7 +224,29 @@ public class RandomPlusPlusAgent : NonMLAgent
 
 
     private static string GETPath(){
-        return Application.dataPath +"/CSV/Pathfinder/"+"random_plus_plus_eval" + SceneManager.GetActiveScene().name +".csv";
+        return Application.dataPath +"/CSV/RandomPlusPlus/"+"random_plus_plus_eval" + SceneManager.GetActiveScene().name +".csv";
+    }
+    
+    private void CheckHowManyObjectsSeen()
+    {
+
+        foreach (var obj in allObjects)
+        {
+            var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
+            
+            //Is in FOV
+            if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
+                (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+            {
+                noOfObjectsSeen++;
+                if (noOfObjectsSeen > nMax)
+                {
+                    nMax = noOfObjectsSeen;
+                    //Debug.Log(nMax);
+                }
+                  
+            }
+        }
     }
 
 }

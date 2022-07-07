@@ -36,7 +36,9 @@ public class TrueRandomAgent : NonMLAgent
         allObjects = FindObjectsOfType<GameObject>();
         typesSeen = new HashSet<String>();
         //trueRandomAgent.transform.position = new Vector3(0,1,0);
-        nMax = 10;
+        nMax = 1;
+        noOfObjectsSeen = 0;
+        CheckHowManyObjectsSeen();
         distance = 10;
         foreach (var t in allObjects)
         {
@@ -55,6 +57,7 @@ public class TrueRandomAgent : NonMLAgent
 
             for (var i = 0; i < 4; i++)
             {
+                CheckHowManyObjectsSeen();
                 interestMeasure += allObjects.Where(t => IsInView(trueRandomAgent, t)).Sum(t =>
                     // ReSharper disable once PossibleLossOfFraction
                     objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
@@ -281,9 +284,32 @@ public class TrueRandomAgent : NonMLAgent
      return ((float)1 / allObjects.Length);
  }
  
+ private void CheckHowManyObjectsSeen()
+ {
+
+     foreach (var obj in allObjects)
+     {
+         var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
+            
+         //Is in FOV
+         if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
+             (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+         {
+             noOfObjectsSeen++;
+             if (noOfObjectsSeen > nMax)
+             {
+                 nMax = noOfObjectsSeen;
+                 //Debug.Log(nMax);
+             }
+                  
+         }
+     }
+ }
+ 
  private static string GETPath(){
      return Application.dataPath +"/CSV/TrueRandom/"+"heatmaps_trueRandom_agent_" + SceneManager.GetActiveScene().name +".csv";
  }
+ 
 
     
 }

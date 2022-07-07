@@ -15,10 +15,10 @@ public class ExploratoryAgent : NonMLAgent
     public GameObject player;
     public bool hasMemory;
     public bool hasWeighting;
+    public bool usingNMax;
     //public int noOfWeightings;
     public string[] weightingNames;
 
-    public bool usingNMax;
     
     private Dictionary<GameObject,int> objectsSeen;
     private Dictionary<Vector3, float> interestMeasureTable;
@@ -30,7 +30,7 @@ public class ExploratoryAgent : NonMLAgent
     NavMeshPath p;
     private int noOfObjectsSeen;
 
-    private void Awake()
+    private void Start()
     {
         //maxIters = steps;
         currentIters = 0;
@@ -42,10 +42,8 @@ public class ExploratoryAgent : NonMLAgent
        // player.gameObject.SetActive(false);
         //exploratoryAgent.transform.position = new Vector3(0,1,0);
         nMax = 1;
-        foreach (var t in allObjects)
-        {
-            IsInView(exploratoryAgent,t);
-        }
+        noOfObjectsSeen = 0;
+        CheckHowManyObjectsSeen();
     }
 
     private void Explore()
@@ -58,6 +56,7 @@ public class ExploratoryAgent : NonMLAgent
           for (var j = 0; j < 4; j++)
           {
               noOfObjectsSeen = 0;
+              CheckHowManyObjectsSeen();
               interestMeasure += allObjects.Where(t => IsInView(exploratoryAgent, t)).Sum(t =>
                   // ReSharper disable once PossibleLossOfFraction
                   objectsSeen.Where(kv => kv.Key == t).Sum(kv => (1 / kv.Value) * CalculateInterestingness(t)));
@@ -196,12 +195,6 @@ public class ExploratoryAgent : NonMLAgent
                 }
                 else
                 {
-                    noOfObjectsSeen++;
-                    if (usingNMax && noOfObjectsSeen > nMax)
-                    {
-                        nMax = noOfObjectsSeen;
-                        //Debug.Log(nMax);
-                    }
                     if (!seen | !hasMemory)
                     {
                         interestMeasureTable.Add(position, scoreModifier * CalculateInterestingness(toCheck));
@@ -232,7 +225,7 @@ public class ExploratoryAgent : NonMLAgent
         void Update(){
           if(currentIters <= steps){
             Explore();
-            StartCoroutine(Wait());
+           // StartCoroutine(Wait());
             currentIters++;
 
           }else{
@@ -242,11 +235,7 @@ public class ExploratoryAgent : NonMLAgent
 
         }
 
-      IEnumerator Wait(){
-                yield return new WaitForSecondsRealtime(2f);
-      }
-
-      private Vector3 RandomNavmeshLocation(float radius) {
+        private Vector3 RandomNavmeshLocation(float radius) {
          Vector3 randomDirection = Random.insideUnitSphere * radius;
          randomDirection += transform.position;
          NavMeshHit hit;
@@ -257,21 +246,38 @@ public class ExploratoryAgent : NonMLAgent
          return finalPosition;
      }
 
+      private void CheckHowManyObjectsSeen()
+      {
+
+          foreach (var obj in allObjects)
+          {
+              var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
+            
+              //Is in FOV
+              if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
+                  (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+              {
+                  noOfObjectsSeen++;
+                      if (noOfObjectsSeen > nMax)
+                      {
+                          nMax = noOfObjectsSeen;
+                          //Debug.Log(nMax);
+                      }
+                  
+              }
+          }
+      }
      public override float CalculateInterestingness(GameObject gameObject)
     {
         //var localScale = gameObject.transform.localScale;
         if (hasWeighting & !usingNMax)
         {
             if (weightingNames.Any(t => gameObject.name.Contains(t) && typesSeen.Add(t)))
-            
                 return 10f * ((float)1 / allObjects.Length);
-            
             if (weightingNames.Any(t => gameObject.name.Contains(t)))
                 return (10f * ((float)1 / allObjects.Length))/2;
             
             return 10f * ((float)1 / allObjects.Length);
-
-            
         }
         
         if (hasWeighting & usingNMax)
@@ -285,24 +291,6 @@ public class ExploratoryAgent : NonMLAgent
             
             return 10f * ((float)1 / nMax);
         }
-        // if (gameObject.name.Contains("Tree") && hasWeighting && !usingNMax){
-        //     if (typesSeen.Add("Tree"))
-        //         return (localScale.x + localScale.z + localScale.y) * ((float) 1 / allObjects.Length);
-        //     return (localScale.x + localScale.z +
-        //             localScale.y) * ((float) 1 / allObjects.Length) / 2;
-        //
-        // }
-        //
-        // if (gameObject.name.Contains("Tree") && hasWeighting && usingNMax)
-        // {
-        //
-        //     if (typesSeen.Add("Tree"))
-        //         return (localScale.x + localScale.z +
-        //                 localScale.y) * ((float) 1 / nMax);
-        //     return (localScale.x + localScale.z +
-        //             localScale.y) * ((float) 1 / nMax) / 2;
-        //
-        // }
         if(usingNMax)
             return ((float)1 / nMax);
         
