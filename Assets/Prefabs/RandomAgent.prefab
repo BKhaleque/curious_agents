@@ -196,7 +196,7 @@ MonoBehaviour:
   steps: 100
   xStepSize: 1
   zStepSize: 1
-  scoreModifier: 10
+  scoreModifier: 1
   currentIters: 0
   weightingNames: []
   pathfinderAgent: {fileID: 7607849133220429179}

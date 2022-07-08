@@ -101,11 +101,14 @@ MonoBehaviour:
   steps: 100
   xStepSize: 5
   zStepSize: 5
-  scoreModifier: 10
+  scoreModifier: 1
   currentIters: 0
   globalAgent: {fileID: 6773631251527818507}
+  hasWeighting: 0
+  usingNMax: 1
   totalXSize: 200
   totalZSize: 200
+  weightingNames: []
 --- !u!1 &7617992389391384300
 GameObject:
   m_ObjectHideFlags: 0
