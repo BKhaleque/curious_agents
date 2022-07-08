@@ -3035,6 +3035,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3168790167324229056, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627521325182312623, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5627521325290834132, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
@@ -3051,7 +3055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5627521325290834137, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 31.2
+      value: 5.77
       objectReference: {fileID: 0}
     - target: {fileID: 5627521325290834137, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3094,12 +3098,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1585433704}
+    - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: radius
-      value: 1000
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
+      propertyPath: navMeshAgent
+      value: 
+      objectReference: {fileID: 2067152210}
+    - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: numberOfRays
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
@@ -5963,7 +5975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &439852801
 AudioListener:
   m_ObjectHideFlags: 0
@@ -19551,6 +19563,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9169c339144ed8c47bf7dcb9c3828dec, type: 3}
+--- !u!20 &1585433704 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5627521325182312617, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
+  m_PrefabInstance: {fileID: 251327710}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1587647067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25965,6 +25982,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2471475776521536039, guid: 6a7f4839d4c8cb340b20b7efce286748, type: 3}
   m_PrefabInstance: {fileID: 2046753959}
+  m_PrefabAsset: {fileID: 0}
+--- !u!195 &2067152210 stripped
+NavMeshAgent:
+  m_CorrespondingSourceObject: {fileID: 5627521325290834136, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
+  m_PrefabInstance: {fileID: 251327710}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2067495417
 PrefabInstance:
