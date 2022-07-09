@@ -3103,7 +3103,7 @@ PrefabInstance:
       objectReference: {fileID: 1585433704}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: radius
-      value: 150
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: navMeshAgent
@@ -3111,7 +3111,7 @@ PrefabInstance:
       objectReference: {fileID: 2067152210}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: numberOfRays
-      value: 12
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}

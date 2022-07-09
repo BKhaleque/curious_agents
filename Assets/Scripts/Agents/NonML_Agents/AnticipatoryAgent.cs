@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Agents;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class AnticipatoryAgent : NonMLAgent
 {
@@ -12,7 +14,8 @@ public class AnticipatoryAgent : NonMLAgent
     public float radius; //Determines length of raycast 
     private Dictionary<Vector3, float> anticipatoryContextMap;
     private Dictionary<Vector3, float> nonAnticipatoryContextMap;
-    
+    private float turnFraction = (float)(1 + Math.Sqrt(5)) / 2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,12 +28,15 @@ public class AnticipatoryAgent : NonMLAgent
         anticipatoryContextMap = new Dictionary<Vector3, float>();
         nonAnticipatoryContextMap = new Dictionary<Vector3, float>();
         buildContextMap();
-        if (nonAnticipatoryContextMap.Count == 0 || anticipatoryContextMap.Count == 0)
+        if (anticipatoryContextMap.Count == 0)
         {
-            transform.position  = RandomNavmeshLocation(radius);
+            transform.position  += RandomNavmeshLocation(10) * Time.deltaTime;
+            Debug.Log("No anticipation found");
         }
         else
         {
+            Debug.Log("Anticipation found");
+        
             float noHitsummation = 0f;
             float hitSummation = 0f;
             foreach (var kv in anticipatoryContextMap)
@@ -41,18 +47,13 @@ public class AnticipatoryAgent : NonMLAgent
             {
                 hitSummation = kv.Value;
             }
-
+        
             if (hitSummation > noHitsummation)
-                transform.position -= nonAnticipatoryContextMap.ElementAt(0).Key * Time.deltaTime;
+                transform.position -= nonAnticipatoryContextMap.ElementAt(0).Key * radius *Time.deltaTime ;
             else if (noHitsummation > hitSummation)
-                transform.position += anticipatoryContextMap.ElementAt(0).Key * Time.deltaTime;
+                transform.position += anticipatoryContextMap.ElementAt(0).Key * radius *Time.deltaTime;
             else
-                transform.position += anticipatoryContextMap.ElementAt(0).Key * Time.deltaTime;
-
-                
-            
-            
-            
+                transform.position  += RandomNavmeshLocation(10) * Time.deltaTime;
         }
 
                 
@@ -66,13 +67,13 @@ public class AnticipatoryAgent : NonMLAgent
         List<Vector3> noHitDirs = new List<Vector3>();
         for (int i = 0; i < numberOfRays; i++)
         {
-            float x = Mathf.Sin (angle);
-            float z = Mathf.Cos (angle);
+            float x = radius * Mathf.Cos (angle);
+            float y = radius * Mathf.Sin (angle);
             //float z = Mathf.Cos(angle);
-            angle +=  2* Mathf.PI / numberOfRays;
-            Vector3 dir = new Vector3 (transform.position.x + x,transform.position.y  , transform.position.z + z);
+            angle +=  2* Mathf.PI *turnFraction ;
+            Vector3 dir = new Vector3 (transform.position.x + x,transform.position.y + y  , transform.position.z + radius );
             RaycastHit hit;
-            //Debug.DrawLine (transform.position, dir, Color.red);
+            Debug.DrawLine (transform.position, dir, Color.red);
             if (Physics.Raycast (transform.position, dir, out hit, radius))
             {
                 numOfRayCastsHit++;
@@ -91,7 +92,7 @@ public class AnticipatoryAgent : NonMLAgent
 
         if (numOfRayCastsHit ==0||numOfRayCastsHit == numberOfRays)
         {
-            //transform.position += RandomNavmeshLocation(radius);
+            //transform.position = RandomNavmeshLocation(radius);
             return;
         }
 
