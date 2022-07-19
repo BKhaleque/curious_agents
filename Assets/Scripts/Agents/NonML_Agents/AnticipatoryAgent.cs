@@ -15,6 +15,7 @@ public class AnticipatoryAgent : NonMLAgent
     private Dictionary<Vector3, float> anticipatoryContextMap;
     private Dictionary<Vector3, float> nonAnticipatoryContextMap;
     private float turnFraction = (float)(1 + Math.Sqrt(5)) / 2;
+    private float speed = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -30,8 +31,8 @@ public class AnticipatoryAgent : NonMLAgent
         buildContextMap();
         if (anticipatoryContextMap.Count == 0)
         {
-            transform.position  += RandomNavmeshLocation(10) * Time.deltaTime;
             Debug.Log("No anticipation found");
+            transform.position  += RandomNavmeshLocation(radius) * speed* Time.deltaTime ; //move toward a random location
         }
         else
         {
@@ -41,20 +42,26 @@ public class AnticipatoryAgent : NonMLAgent
             float hitSummation = 0f;
             foreach (var kv in anticipatoryContextMap)
             {
-                noHitsummation = kv.Value;
+                noHitsummation += kv.Value;
             }
             foreach (var kv in nonAnticipatoryContextMap)
             {
-                hitSummation = kv.Value;
+                hitSummation += kv.Value;
             }
         
             if (hitSummation > noHitsummation)
-                transform.position -= nonAnticipatoryContextMap.ElementAt(0).Key * radius *Time.deltaTime ;
+                //transform.position += nonAnticipatoryContextMap.ElementAt(Random.Range(0,nonAnticipatoryContextMap.Count)).Key * speed *Time.deltaTime;
+                transform.position  -= RandomNavmeshLocation(radius) * speed* Time.deltaTime ; //move toward a random location
+
             else if (noHitsummation > hitSummation)
-                transform.position += anticipatoryContextMap.ElementAt(0).Key * radius *Time.deltaTime;
+                transform.position += anticipatoryContextMap.ElementAt(Random.Range(0,anticipatoryContextMap.Count)).Key * speed *Time.deltaTime;
             else
-                transform.position  += RandomNavmeshLocation(10) * Time.deltaTime;
+                //transform.position  += Vector3.forward *speed* Time.deltaTime; //Keep moving forward
+                transform.position  += RandomNavmeshLocation(radius) * speed* Time.deltaTime ; //move toward a random location
+
         }
+        
+        //gameObject.transform.Rotate(0,90,0);
 
                 
     }
@@ -70,21 +77,23 @@ public class AnticipatoryAgent : NonMLAgent
             float x = radius * Mathf.Cos (angle);
             float y = radius * Mathf.Sin (angle);
             //float z = Mathf.Cos(angle);
-            angle +=  2* Mathf.PI *turnFraction ;
-            Vector3 dir = new Vector3 (transform.position.x + x,transform.position.y + y  , transform.position.z + radius );
+            angle +=  2*Mathf.PI *turnFraction ;
+            Vector3 dir = new Vector3 (transform.position.x + x,transform.position.y + y  , transform.position.z + (angle+radius));
             RaycastHit hit;
             Debug.DrawLine (transform.position, dir, Color.red);
             if (Physics.Raycast (transform.position, dir, out hit, radius))
             {
-                numOfRayCastsHit++;
-                hitDirs.Add(dir);
-                //for the raycasts that did hit add them to the non anticipatory context map
+                if (hit.collider.gameObject.tag != "terrain")
+                {
+                    numOfRayCastsHit++;
+                    hitDirs.Add(dir);
+                }
+
                 //nonAnticipatoryContextMap.Add(dir, 1f-(1/numberOfRays));
 
             }
             else
             {
-                //for the raycasts that didn't hit, add them to the anticipatory context map
                 noHitDirs.Add(dir);
                 //anticipatoryContextMap.Add(dir,1f-(1/numberOfRays));
             }
@@ -96,10 +105,11 @@ public class AnticipatoryAgent : NonMLAgent
             return;
         }
 
+        //for the raycasts that did hit add them to the non anticipatory context map
         for (int i = 0; i < hitDirs.Count; i++)
             nonAnticipatoryContextMap.Add(hitDirs[i], 1f-(1/numOfRayCastsHit));   
         
-
+        //for the raycasts that didn't hit, add them to the anticipatory context map
         for (int i = 0; i < noHitDirs.Count; i++)
             anticipatoryContextMap.Add(noHitDirs[i], 1f-(1/numOfRayCastsHit));
 

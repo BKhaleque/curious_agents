@@ -88,23 +88,7 @@ namespace Agents
                      Debug.Log("Viable position");
             
                      gameObject.transform.position = target;
-                     foreach (var t in allObjects)
-                     {
-                         // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
-                         for (var i = 0; i < 4; i++)
-                         {
-                             CheckHowManyObjectsSeen();
-                             if (i != 3)
-                             {
-                                 if (t.name != "Generator" || t.name != "GlobalAgent")
-                                     IsInView(globalAgent, t);
-                             }
-            
-                             //Debug.Log(i);
-                             cam.transform.Rotate(0f, 90f, 0f);
-                             gameObject.transform.Rotate(0, 90f, 0);
-                         }
-                     }
+
                  }
                  else
                  {
@@ -112,6 +96,24 @@ namespace Agents
                      
                      gameObject.transform.position = RandomNavmeshLocation(10f);
                      //break;
+                 }
+                 
+                 foreach (var t in allObjects)
+                 {
+                     // if (t.name == "Generator" && t.name == "GlobalAgent") continue;
+                     for (var i = 0; i < 4; i++)
+                     {
+                         CheckHowManyObjectsSeen();
+                         if (i != 3)
+                         {
+                             if (t.name != "Generator" || t.name != "GlobalAgent")
+                                 IsInView(globalAgent, t);
+                         }
+            
+                         //Debug.Log(i);
+                         cam.transform.Rotate(0f, 90f, 0f);
+                         gameObject.transform.Rotate(0, 90f, 0);
+                     }
                  }
              }
 
@@ -156,7 +158,6 @@ namespace Agents
             {
                 // Debug.Log(kv.Key);
                 // Debug.Log(kv.Value);
-
                 writer.WriteLine("{0};{1};{2};", kv.Key.x, kv.Key.z, kv.Value);
             }
             gameObject.SetActive(false);

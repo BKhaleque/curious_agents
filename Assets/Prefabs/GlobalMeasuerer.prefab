@@ -99,8 +99,8 @@ MonoBehaviour:
   cam: {fileID: 6773631251526122577}
   navMeshAgent: {fileID: 6773631251527818505}
   steps: 100
-  xStepSize: 5
-  zStepSize: 5
+  xStepSize: 1
+  zStepSize: 1
   scoreModifier: 1
   currentIters: 0
   globalAgent: {fileID: 6773631251527818507}
@@ -137,7 +137,7 @@ Transform:
   m_GameObject: {fileID: 7617992389391384300}
   m_LocalRotation: {x: 0, y: 0.03489949, z: 0, w: 0.99939084}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_Children: []
   m_Father: {fileID: 6773631251527818548}
   m_RootOrder: 1
