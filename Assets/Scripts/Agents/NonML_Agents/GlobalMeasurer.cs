@@ -80,7 +80,7 @@ namespace Agents
         void Update()
         {
             if (!(i <= totalXSize)) return;
-             for (int z = -totalZSize; z < totalZSize; z++)
+             for (float z = -totalZSize; z < totalZSize; z+=zStepSize)
              {
                  Vector3 target = new Vector3(i, Random.Range(-terrain.GetComponent<Renderer>().bounds.size.y, terrain.GetComponent<Renderer>().bounds.size.y), z);
                  if (SetDestination(target))

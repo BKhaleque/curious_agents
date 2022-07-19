@@ -14984,6 +14984,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6773631251527818504, guid: cef540809b889430faf7c51545006bb2, type: 3}
+      propertyPath: xStepSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6773631251527818504, guid: cef540809b889430faf7c51545006bb2, type: 3}
+      propertyPath: zStepSize
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6773631251527818507, guid: cef540809b889430faf7c51545006bb2, type: 3}
       propertyPath: m_Name
       value: GlobalMeasuerer
