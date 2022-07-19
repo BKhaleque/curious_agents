@@ -46,10 +46,6 @@ namespace Agents
         //private AssetAreaSpawner landmarkSpawner;
 
 
-
-
-        private Vector3[] vertices;
-
         private Dictionary<Vector3,float> interestMeasureTable;
 
         private float i;
