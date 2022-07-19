@@ -14,7 +14,7 @@ public class NewGlobalMeasurer : NonMLAgent
     private float curMaxY = float.MinValue;
     private float curMinY = float.MaxValue;
     private GameObject terrain;
-    public GameObject validatorAgent;
+    //public GameObject validatorAgent;
     //public NavMeshAgent navMeshAgent;
     private NavMeshSurface surface;
     private GameObject[] allObjects;
@@ -31,6 +31,7 @@ public class NewGlobalMeasurer : NonMLAgent
     {
         terrain = GameObject.FindGameObjectWithTag("terrain");
         allObjects = FindObjectsOfType<GameObject>();
+       // Debug.Log(allObjects.Length);
         curMaxY = terrain.GetComponent<Renderer>().bounds.size.y;
         interestMeasureTable = new Dictionary<Vector3, float>();
         typesSeen = new HashSet<string>();
@@ -45,7 +46,7 @@ public class NewGlobalMeasurer : NonMLAgent
             //Debug.Log(kv.Value);
             writer.WriteLine("{0};{1};{2};", kv.Key.x, kv.Key.z, kv.Value);
         }
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     
     private static string GETPath(){
@@ -68,9 +69,9 @@ public class NewGlobalMeasurer : NonMLAgent
         var totalPoints = 0f;
 
         //look in a grid fron (bottom left + validationNavProportion) to top (right - validationNavProportion)
-        for (var z = zStep; z <= zMax; z += zStep)
+        for (float z = -zSize; z <= zMax; z += zStep)
         {
-            for (var x = xStep; x <= xMax; x += xStep)
+            for (float x = -xSize; x <= xMax; x += xStep)
             {
                 totalReached += GetNumberOfReachables(x, z, xStep, zStep, xMax, zMax);
                 if (x+xStep <= xMax)
@@ -127,16 +128,17 @@ public class NewGlobalMeasurer : NonMLAgent
         {
             for (var i = 0; i < 4; i++)
             {
-                Debug.Log(validatorAgent.transform.position);
+                noOfObjectsSeen = 0;
+                //Debug.Log(gameObject.transform.position);
                 if (i != 3)
                 {
                     CheckHowManyObjectsSeen();
-                    IsInView(validatorAgent, t);
+                    IsInView(gameObject, t);
                 }
 
 
                 cam.transform.Rotate(0.0f,90.0f,0.0f);
-                gameObject.transform.Rotate(0, 90f, 0);
+                //gameObject.transform.Rotate(0, 90f, 0);
 
             }
         }
@@ -151,8 +153,7 @@ public class NewGlobalMeasurer : NonMLAgent
             var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
             
             //Is in FOV
-            if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
-                (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+            if (Physics.Linecast(gameObject.transform.position, obj.transform.position, out var hit))
             {
                 // if (!Physics.Linecast(gameObject.transform.position, obj.transform.position, out var hit))
                 // {
@@ -184,7 +185,7 @@ public class NewGlobalMeasurer : NonMLAgent
                     interestMeasureTable.Add(position,0f);
                    // interestMeasureTable[position].Add(rotation,0f);
                 }
-                // Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
+                 //Debug.Log(origin.name +" is behind: " + toCheck.name + " at point " + position );
                 return false;
             }
 
@@ -192,7 +193,7 @@ public class NewGlobalMeasurer : NonMLAgent
             if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
                 (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
             {
-              //  Debug.Log("OutOfBounds: " + toCheck.name + " at point " + position);
+               // Debug.Log("OutOfBounds: " + toCheck.name + " at point " + position);
                 if (interestMeasureTable.ContainsKey(position))
                 {
                         interestMeasureTable[position]+= 0f;
@@ -211,6 +212,7 @@ public class NewGlobalMeasurer : NonMLAgent
 
             if (!Physics.Linecast(position, toCheck.transform.position, out var hit))
             {
+                Debug.Log("Hit an object");
                 //score += 1 / allObjects.Length;
                 if (interestMeasureTable.ContainsKey(position))
                 {
@@ -224,7 +226,7 @@ public class NewGlobalMeasurer : NonMLAgent
                 }
                 return true;
             }
-            if (hit.transform.name == toCheck.name) return true;
+            //if (hit.transform.name == toCheck.name) return true;
             //Debug.DrawLine(cam.transform.position, toCheck.transform.position, Color.red);
             if (interestMeasureTable.ContainsKey(position))
             {
@@ -234,7 +236,7 @@ public class NewGlobalMeasurer : NonMLAgent
             {
                 interestMeasureTable.Add(position,0f);
             }
-            //  Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
+            // Debug.Log(toCheck.name + " occluded by " + hit.transform.name + " at point " + position);
             return false;
         }
 

@@ -101,10 +101,8 @@ MonoBehaviour:
   steps: 0
   xStepSize: 0
   zStepSize: 0
-  scoreModifier: 0
+  scoreModifier: 1
   currentIters: 0
-  validatorAgent: {fileID: 6773631251527818507}
-  navMeshAgent: {fileID: 6773631251527818505}
   weightingNames: []
   hasWeighting: 0
   usingNMax: 1

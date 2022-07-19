@@ -303,13 +303,12 @@ namespace Agents
         private void CheckHowManyObjectsSeen()
         {
 
-            foreach (var obj in allObjects)
+            foreach (var obj in allObjects)     
             {
                 var pointOnScreen = cam.WorldToScreenPoint(obj.transform.position);
             
                 //Is in FOV
-                if ((pointOnScreen.x < 0) || (pointOnScreen.x > Screen.width) ||
-                    (pointOnScreen.y < 0) || (pointOnScreen.y > Screen.height))
+                if (Physics.Linecast(gameObject.transform.position, obj.transform.position, out var hit))
                 {
                     // if (!Physics.Linecast(gameObject.transform.position, obj.transform.position, out var hit))
                     // {
