@@ -3063,7 +3063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5627521325290834137, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 5627521325290834137, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3107,7 +3107,7 @@ PrefabInstance:
       objectReference: {fileID: 1585433704}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: radius
-      value: 120
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7068320764665417876, guid: 06690d356a1e742ceacea419dbdb221b, type: 3}
       propertyPath: navMeshAgent

@@ -51,13 +51,13 @@ public class AnticipatoryAgent : NonMLAgent
         
             if (hitSummation > noHitsummation)
                 //transform.position += nonAnticipatoryContextMap.ElementAt(Random.Range(0,nonAnticipatoryContextMap.Count)).Key * speed *Time.deltaTime;
-                transform.position  -= RandomNavmeshLocation(radius) * speed* Time.deltaTime ; //move toward a random location
+                transform.position  += RandomNavmeshLocation(10f) * speed* Time.deltaTime ; //move toward a random location
 
             else if (noHitsummation > hitSummation)
                 transform.position += anticipatoryContextMap.ElementAt(Random.Range(0,anticipatoryContextMap.Count)).Key * speed *Time.deltaTime;
             else
                 //transform.position  += Vector3.forward *speed* Time.deltaTime; //Keep moving forward
-                transform.position  += RandomNavmeshLocation(radius) * speed* Time.deltaTime ; //move toward a random location
+                transform.position  += RandomNavmeshLocation(10f) * speed* Time.deltaTime ; //move toward a random location
 
         }
         
@@ -130,7 +130,7 @@ public class AnticipatoryAgent : NonMLAgent
     {
         throw new System.NotImplementedException();
     }
-
+    
     public override float CalculateInterestingness(GameObject gameObject)
     {
         throw new System.NotImplementedException();
